@@ -14,7 +14,6 @@ setup(
         'http://github.com/praekelt/jmbo-foundry/tarball/develop/2.6.praekelt#egg=jmbo-foundry-2.6.praekelt',
     ],
     install_requires = [
-        'lxml',
         'xmlrpclib',
         'jmbo-foundry==1.1.15',
         'django>=1.4,<1.5',
