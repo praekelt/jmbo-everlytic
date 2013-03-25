@@ -1,3 +1,5 @@
+from skeleton.dev_basic_site import *
+
 DEBUG = True
 
 DATABASES = {
@@ -44,26 +46,8 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
-INSTALLED_APPS = [
-    'atlas',
-    'django.contrib.auth',
-    'django.contrib.comments',
-    'django.contrib.contenttypes',
-    'django.contrib.sites',
-    'django.contrib.gis',
-    'django.contrib.sessions',
-    'category',
-    'preferences',
-    'jmbo',
-    'competition',
-    'photologue',
-    'secretballot',
-    'publisher',
-    'foundry',
-    'everlytic',
-    'compressor',
-    'social_auth'
-]
+
+INSTALLED_APPS = INSTALLED_APPS + ('everlytic',)
 
 EVERLYTIC = {
     'URL': 'http://praekelt-host2.pmailer.net/api/1.0',

@@ -1,5 +1,6 @@
 from xmlrpclib import ServerProxy, Fault, Error, ProtocolError
 
+from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 
 
@@ -8,10 +9,9 @@ try:
     EVERLYTIC_API_KEY = settings.EVERLYTIC['API_KEY']
     EVERLYTIC_LIST_ID = settings.EVERLYTIC['LIST_ID']
 except AttributeError:
-    raise exceptions.ImproperlyConfigured("EVERLYTIC settings are missing")
+    raise ImproperlyConfigured("EVERLYTIC settings are missing")
 except KeyError as e:
-    raise exceptions.ImproperlyConfigured(
-            "EVERLYTIC setting %s is missing." % str(e))
+    raise ImproperlyConfigured("EVERLYTIC setting %s is missing." % str(e))
 
 
 def subscribeUser(user):
