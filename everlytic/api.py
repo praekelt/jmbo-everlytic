@@ -28,20 +28,49 @@ def subscribeUser(last_name, first_name,
     except IOError:
         return -1
 
-    # Check for an existing everlytic user just to be safe
+    # Check for an existing everlytic user just to be safe, even if we
+    # create her on our side for the first time. She may have subscribed
+    # via other channels with Everlytic already.
     if everlytic_id == 0:
-        everlytic_id = _checkForExistingEverlyticUser(last_name,
+        everlytic_id = _checkForExistingEverlyticUser(sp, last_name,
                                                      first_name,
-                                                     email, sp)
+                                                     email)
 
     if everlytic_id < 0:
         # We have a new Everlytic user, so create the user on the everlytic
-        # database, even if they don't subscribe to mailing lists yet.
+        # database, and set the subscriptions status accordingly
         return _createEverlyticUser(sp, email, receive_email,
                                     last_name, first_name)
 
     # For an existing user, update her status on the list
-    return _createEverlyticUser(sp, email, receive_email)
+    _updateSubscription(sp, everlytic_id, receive_email)
+    return everlytic_id
+
+
+def _updateSubscription(sp, contact_id, receive_email):
+    """ Update the subscription status of a contact on a mailing list.
+    """
+    try:
+        result = sp.contacts.updateSubscriptions(EVERLYTIC_API_KEY, 
+                contact_id, 
+                {
+                    str(EVERLYTIC_LIST_ID): {
+                        "cmapping_email_status": \
+                            receive_email and "subscribed" or "unsubscribed"
+                        
+                    }
+                })
+        if result['status'] != 'success':
+            # TODO: log the result['message']
+            pass
+    except Fault:
+        # TODO: Log the error
+        pass
+    except ProtocolError:
+        # TODO: Log the error
+        pass
+    except ExpatError:
+        pass
 
 
 def _createEverlyticUser(sp, email, receive_email, 
@@ -70,10 +99,15 @@ def _createEverlyticUser(sp, email, receive_email,
     except Fault:
         # TODO: Log the error
         pass
+    except ProtocolError:
+        # TODO: Log the error
+        pass
+    except ExpatError:
+        pass
     return -1
 
 
-def _checkForExistingEverlyticUser(last_name, first_name, email, sp):
+def _checkForExistingEverlyticUser(sp, last_name, first_name, email):
     """ Check if the user exists on the Everlytic database
     """
     try:
@@ -91,6 +125,9 @@ def _checkForExistingEverlyticUser(last_name, first_name, email, sp):
     except Fault:
         # TODO: Log the error
         pass
+    except ProtocolError:
+        # TODO: Log the error
+        pass
     except ExpatError:
         pass
     return -1
@@ -99,19 +136,23 @@ def _checkForExistingEverlyticUser(last_name, first_name, email, sp):
 def deleteEverlyticUser(contact_id):
     """ Delete the given contact from the Everlytic database
     """
-    # create the connection to the host
+    # Create the connection to the host
     sp = None
     try:
         sp = ServerProxy(EVERLYTIC_HOST)
     except IOError:
         # TODO: Log the error
         return
+    # Delete the user
     try:
         result = sp.contacts.delete(EVERLYTIC_API_KEY, contact_id)
         if result['status'] != 'success':
             # TODO: LOG the result['message']
             pass
     except Fault:
+        # TODO: Log the error
+        pass
+    except ProtocolError:
         # TODO: Log the error
         pass
     except ExpatError:
