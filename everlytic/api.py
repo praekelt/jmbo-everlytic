@@ -1,4 +1,4 @@
-from xmlrpclib import ServerProxy, Fault, Error, ProtocolError
+from xmlrpclib import ServerProxy, Fault, ProtocolError
 from xml.parsers.expat import ExpatError
 
 from django.core.exceptions import ImproperlyConfigured
@@ -15,9 +15,9 @@ except KeyError as e:
     raise ImproperlyConfigured("EVERLYTIC setting %s is missing." % str(e))
 
 
-def subscribeUser(last_name, first_name, 
+def subscribeUser(last_name, first_name,
                   email, receive_email,
-                  everlytic_id):
+                  everlytic_id=None):
     """ Subscribe the user to the everlytic mailing list, and return the
     everlytic user id to the caller.
     """
@@ -26,21 +26,20 @@ def subscribeUser(last_name, first_name,
     try:
         sp = ServerProxy(EVERLYTIC_HOST)
     except IOError:
-        return -1
+        return None
 
     # Check for an existing everlytic user just to be safe, even if we
     # create her on our side for the first time. She may have subscribed
     # via other channels with Everlytic already.
-    if everlytic_id == 0:
+    if not everlytic_id:
         everlytic_id = _checkForExistingEverlyticUser(sp, last_name,
-                                                     first_name,
-                                                     email)
-
-    if everlytic_id < 0:
-        # We have a new Everlytic user, so create the user on the everlytic
-        # database, and set the subscriptions status accordingly
-        return _createEverlyticUser(sp, email, receive_email,
-                                    last_name, first_name)
+                                                      first_name,
+                                                      email)
+        if not everlytic_id:
+            # We have a new Everlytic user, so create the user on the everlytic
+            # database, and set the subscriptions status accordingly
+            return _createEverlyticUser(sp, email, receive_email,
+                                        last_name, first_name)
 
     # For an existing user, update her status on the list
     _updateSubscription(sp, everlytic_id, receive_email)
@@ -51,15 +50,13 @@ def _updateSubscription(sp, contact_id, receive_email):
     """ Update the subscription status of a contact on a mailing list.
     """
     try:
-        result = sp.contacts.updateSubscriptions(EVERLYTIC_API_KEY, 
-                contact_id, 
-                {
-                    str(EVERLYTIC_LIST_ID): {
-                        "cmapping_email_status": \
-                            receive_email and "subscribed" or "unsubscribed"
-                        
-                    }
-                })
+        result = sp.contacts.updateSubscriptions(EVERLYTIC_API_KEY,
+                                                 contact_id,
+                                                 {
+                                                     str(EVERLYTIC_LIST_ID): {
+                                                         "cmapping_email_status": receive_email and "subscribed" or "unsubscribed"
+                                                     }
+                                                 })
         if result['status'] != 'success':
             # TODO: log the result['message']
             pass
@@ -73,24 +70,22 @@ def _updateSubscription(sp, contact_id, receive_email):
         pass
 
 
-def _createEverlyticUser(sp, email, receive_email, 
+def _createEverlyticUser(sp, email, receive_email,
                          last_name=None, first_name=None):
     """ Create a new user on the EverLytic service and (un)subscribe them to
     the list, all in one go.
     """
-    params = {
-            'contact_email': email
-            }
+    params = {'contact_email': email}
     if first_name is not None:
         params['contact_name'] = first_name
     if last_name is not None:
         params['contact_lastname'] = last_name
     try:
-        result = sp.contacts.create(EVERLYTIC_API_KEY, 
-                params, 
-                [EVERLYTIC_LIST_ID], 
-                receive_email and "subscribed" or "unsubscribed", 
-                "update")
+        result = sp.contacts.create(EVERLYTIC_API_KEY,
+                                    params,
+                                    [EVERLYTIC_LIST_ID],
+                                    receive_email and "subscribed" or "unsubscribed",
+                                    "update")
         if result['status'] == 'success':
             return result['contact_id']
         else:
@@ -104,7 +99,8 @@ def _createEverlyticUser(sp, email, receive_email,
         pass
     except ExpatError:
         pass
-    return -1
+
+    return None
 
 
 def _checkForExistingEverlyticUser(sp, last_name, first_name, email):
@@ -116,7 +112,7 @@ def _checkForExistingEverlyticUser(sp, last_name, first_name, email):
             'contact_lastname': last_name,
             'contact_name': first_name,
             'contact_email': email
-            })
+        })
         if int(result['total']) > 0:
             # TODO: Make sure this compromise will work!
             # Take the first result in the returned list
@@ -130,7 +126,8 @@ def _checkForExistingEverlyticUser(sp, last_name, first_name, email):
         pass
     except ExpatError:
         pass
-    return -1
+
+    return None
 
 
 def deleteEverlyticUser(contact_id):
