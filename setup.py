@@ -15,7 +15,7 @@ setup(
     ],
     install_requires = [
         'xmlrpclib',
-        'jmbo-foundry==1.1.15',
+        'jmbo-foundry',
         'django>=1.4,<1.5',
     ],
     tests_require=[
