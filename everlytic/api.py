@@ -1,8 +1,12 @@
+import logging
 from xmlrpclib import ServerProxy, Fault, ProtocolError
 from xml.parsers.expat import ExpatError
 
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
+
+
+logger = logging.getLogger("everlytic-api")
 
 
 try:
@@ -26,6 +30,7 @@ def subscribeUser(last_name, first_name,
     try:
         sp = ServerProxy(EVERLYTIC_HOST)
     except IOError:
+        logger.error("xmlrpclib: Could not connect to the remote host.")
         return None
 
     # Check for an existing everlytic user just to be safe, even if we
@@ -58,16 +63,14 @@ def _updateSubscription(sp, contact_id, receive_email):
                                                      }
                                                  })
         if result['status'] != 'success':
-            # TODO: log the result['message']
-            pass
-    except Fault:
-        # TODO: Log the error
-        pass
-    except ProtocolError:
-        # TODO: Log the error
-        pass
+            logger.warning("Everlytic error: %s", result['message'])
+    except Fault as e:
+        logger.error("XMLRPC Fault. Code: %s, Message %s", e.faultCode, e.faultString)
+    except ProtocolError as e:
+        logger.error("XMLRPC Protocol Error. url: %s, code: %s, message: %s", 
+                e.url, e.errcode, e.errmsg)
     except ExpatError:
-        pass
+        logger.error("ExpatError: Response does not contain XML")
 
 
 def _createEverlyticUser(sp, email, receive_email,
@@ -89,16 +92,14 @@ def _createEverlyticUser(sp, email, receive_email,
         if result['status'] == 'success':
             return result['contact_id']
         else:
-            # TODO: Log the result['message']
-            pass
-    except Fault:
-        # TODO: Log the error
-        pass
-    except ProtocolError:
-        # TODO: Log the error
-        pass
+            logger.warning("Everlytic error: %s", result['message'])
+    except Fault as e:
+        logger.error("XMLRPC Fault. Code: %s, Message %s", e.faultCode, e.faultString)
+    except ProtocolError as e:
+        logger.error("XMLRPC Protocol Error. url: %s, code: %s, message: %s", 
+                e.url, e.errcode, e.errmsg)
     except ExpatError:
-        pass
+        logger.error("ExpatError: Response does not contain XML")
 
     return None
 
@@ -118,14 +119,13 @@ def _checkForExistingEverlyticUser(sp, last_name, first_name, email):
             # Take the first result in the returned list
             everlytic_user = result['data'][0]
             return everlytic_user['contact_id']
-    except Fault:
-        # TODO: Log the error
-        pass
-    except ProtocolError:
-        # TODO: Log the error
-        pass
+    except Fault as e:
+        logger.error("XMLRPC Fault. Code: %s, Message %s", e.faultCode, e.faultString)
+    except ProtocolError as e:
+        logger.error("XMLRPC Protocol Error. url: %s, code: %s, message: %s", 
+                e.url, e.errcode, e.errmsg)
     except ExpatError:
-        pass
+        logger.error("ExpatError: Response does not contain XML")
 
     return None
 
@@ -138,19 +138,18 @@ def deleteEverlyticUser(contact_id):
     try:
         sp = ServerProxy(EVERLYTIC_HOST)
     except IOError:
-        # TODO: Log the error
+        logger.error("xmlrpclib: Could not connect to the remote host.")
         return
+
     # Delete the user
     try:
         result = sp.contacts.delete(EVERLYTIC_API_KEY, contact_id)
         if result['status'] != 'success':
-            # TODO: LOG the result['message']
-            pass
-    except Fault:
-        # TODO: Log the error
-        pass
-    except ProtocolError:
-        # TODO: Log the error
-        pass
+            logger.warning("Everlytic error: %s", result['message'])
+    except Fault as e:
+        logger.error("XMLRPC Fault. Code: %s, Message %s", e.faultCode, e.faultString)
+    except ProtocolError as e:
+        logger.error("XMLRPC Protocol Error. url: %s, code: %s, message: %s", 
+                e.url, e.errcode, e.errmsg)
     except ExpatError:
-        pass
+        logger.error("ExpatError: Response does not contain XML")

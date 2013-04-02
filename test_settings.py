@@ -1,11 +1,9 @@
-from skeleton.dev_basic_site import *
-
 DEBUG = True
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.spatialite',
-        'NAME': 'skeleton.db',
+        'NAME': 'everlytic.db',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -47,12 +45,31 @@ TEMPLATE_LOADERS = (
 )
 
 
-INSTALLED_APPS = INSTALLED_APPS + ('everlytic',)
+INSTALLED_APPS = [
+    'atlas',
+    'django.contrib.auth',
+    'django.contrib.comments',
+    'django.contrib.contenttypes',
+    'django.contrib.sites',
+    'django.contrib.gis',
+    'django.contrib.sessions',
+    'category',
+    'preferences',
+    'jmbo',
+    'competition',
+    'photologue',
+    'secretballot',
+    'publisher',
+    'foundry',
+    'everlytic',
+    'compressor',
+    'social_auth',
+]
 
 EVERLYTIC = {
     'URL': 'http://praekelt-host2.pmailer.net/api/1.0',
     'API_KEY': 'DwnGAw4ISfcqLmqnGRYrXOeJw8L3eJBS',
-    'LIST_ID': 12701    # ECR Subscriptions
+    'LIST_ID': 3780    # ECR Subscriptions test
 }
 
 STATIC_URL = 'static/'
