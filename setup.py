@@ -10,9 +10,6 @@ setup(
     license='BSD',
     url='http://github.com/praekelt/jmbo-everlytic',
     packages = find_packages(),
-    dependency_links = [
-        'http://github.com/praekelt/jmbo-foundry/tarball/develop/2.6.praekelt#egg=jmbo-foundry-2.6.praekelt',
-    ],
     install_requires = [
         'xmlrpclib',
         'jmbo-foundry',
