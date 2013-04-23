@@ -33,8 +33,8 @@ The following settings must be added to settings.py:
         'URL': 'http://your-host.pmailer.net/api/1.0'
         'USERNAME': 'xxxxx',
         'PASSWORD': 'xxxxx',
-        'API_KEY': 'xDwnGAw4ISfcqLmqnGRYrXOeJw8L3eJBSx',
-        'LIST_ID': 'your list id' 
+        'API_KEY': 'your_api_key',
+        'LIST_ID': 0    # set to a valid integer
     }
 ::
 

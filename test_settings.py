@@ -66,10 +66,11 @@ INSTALLED_APPS = [
     'social_auth',
 ]
 
+# You will need real values to run the tests
 EVERLYTIC = {
-    'URL': 'http://praekelt-host2.pmailer.net/api/1.0',
-    'API_KEY': 'DwnGAw4ISfcqLmqnGRYrXOeJw8L3eJBS',
-    'LIST_ID': 3780    # ECR Subscriptions test
+    'URL': 'http://your-host.pmailer.net/api/1.0',
+    'API_KEY': 'your_api_key',
+    'LIST_ID': 0
 }
 
 STATIC_URL = 'static/'
