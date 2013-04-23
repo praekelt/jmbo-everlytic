@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='jmbo-everlytic',
-    version='0.1',
+    version='0.1.1',
     description='Jmbo Everlytic mailing list subscription API.',
     long_description = open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read() + open('CHANGELOG.rst', 'r').read(),
     author='Praekelt International',
@@ -10,9 +10,6 @@ setup(
     license='BSD',
     url='http://github.com/praekelt/jmbo-everlytic',
     packages = find_packages(),
-    dependency_links = [
-        'http://github.com/praekelt/jmbo-foundry/tarball/develop/2.6.praekelt#egg=jmbo-foundry-2.6.praekelt',
-    ],
     install_requires = [
         'xmlrpclib',
         'jmbo-foundry',
