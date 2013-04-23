@@ -2,7 +2,7 @@ jmbo-everlytic
 ==============
 
 jmbo-everlytic provides integration with the everlytic (pMailer) API.
-The only functionality supported is adding an removing members from a
+The only functionality supported is adding and removing members from a
 mailing list subscription.
 
 The communication protocol with the everlytic service is xmlrpc.
@@ -29,11 +29,12 @@ Settings
 ********
 The following settings must be added to settings.py:
 ::
-    ERVERLYTIC = {
-        'URL': 'http://praekelt-host2.pmailer.net/api/1.0'
+    EVERLYTIC = {
+        'URL': 'http://your-host.pmailer.net/api/1.0'
         'USERNAME': 'xxxxx',
         'PASSWORD': 'xxxxx',
-        'API_KEY': 'DwnGAw4ISfcqLmqnGRYrXOeJw8L3eJBS',
-        'LIST_ID': '12701 - ECR Subscriptions' 
+        'API_KEY': 'xDwnGAw4ISfcqLmqnGRYrXOeJw8L3eJBSx',
+        'LIST_ID': 'your list id' 
     }
 ::
+
