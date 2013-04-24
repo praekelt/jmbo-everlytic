@@ -30,9 +30,7 @@ Settings
 The following settings must be added to settings.py:
 ::
     EVERLYTIC = {
-        'URL': 'http://your-host.pmailer.net/api/1.0'
-        'USERNAME': 'xxxxx',
-        'PASSWORD': 'xxxxx',
+        'URL': 'http://your-host.pmailer.net/api/1.0',
         'API_KEY': 'your_api_key',
         'LIST_ID': 0    # set to a valid integer
     }
