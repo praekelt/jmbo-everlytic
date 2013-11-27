@@ -1,6 +1,10 @@
 Changelog
 =========
 
+next
+----
+#. Cleanup tests.
+
 0.1.1
 -----
 #. Remove references to private values.
