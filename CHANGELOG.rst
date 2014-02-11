@@ -1,9 +1,10 @@
 Changelog
 =========
 
-next
-----
+0.1.2
+-----
 #. Cleanup tests.
+#. More defensive code when creating profile objects.
 
 0.1.1
 -----
