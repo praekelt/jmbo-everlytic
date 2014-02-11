@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='jmbo-everlytic',
-    version='0.1.1',
+    version='0.1.2',
     description='Jmbo Everlytic mailing list subscription API.',
     long_description = open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read() + open('CHANGELOG.rst', 'r').read(),
     author='Praekelt International',
@@ -13,7 +13,6 @@ setup(
     install_requires = [
         'xmlrpclib',
         'jmbo-foundry',
-        'django>=1.4,<1.5',
     ],
     tests_require=[
         'django-setuptest',

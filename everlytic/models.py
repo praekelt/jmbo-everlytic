@@ -26,13 +26,13 @@ def member_post_save(sender, instance, **kwargs):
     list.
     """
     ep, created = EverlyticProfile.objects.get_or_create(member=instance)
-    if instance.email:
+    if created and instance.email:
         ep.everlytic_id = api.subscribeUser(instance.last_name,
                                             instance.first_name,
                                             instance.email,
                                             instance.receive_email,
                                             everlytic_id=ep.everlytic_id)
-    ep.save()
+        ep.save()
 
 
 @receiver(pre_delete, sender=User)

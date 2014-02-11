@@ -7,8 +7,8 @@ from django.conf import settings
 from django.db import connection, transaction
 
 from foundry.models import Member
-from everlytic.models import EverlyticProfile
 
+from everlytic.models import EverlyticProfile
 from everlytic import api
 
 
@@ -27,7 +27,7 @@ class EverlyticTestCase(TestCase):
         cursor = connection.cursor()
         cursor.execute("DELETE FROM preferences_registrationpreferences")
         cursor.execute("INSERT INTO preferences_preferences (id) VALUES (1)")
-        cursor.execute("""INSERT INTO preferences_registrationpreferences (preferences_ptr_id, 
+        cursor.execute("""INSERT INTO preferences_registrationpreferences (preferences_ptr_id,
             raw_required_fields, raw_display_fields, raw_unique_fields, raw_field_order) VALUES (1, %s, '', '', '{}')""", \
             [required_fields_str])
         cursor.execute("INSERT INTO preferences_preferences_sites (preferences_id, site_id) VALUES (1, 1)")
