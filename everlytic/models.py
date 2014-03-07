@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 from foundry.models import Member
 
-from . import tasks
+from everlytic import tasks
 
 
 class EverlyticProfile(models.Model):
@@ -36,7 +36,8 @@ def member_pre_delete(sender, instance, **kwargs):
     """
     try:
         ep = EverlyticProfile.objects.get(member=instance)
-        tasks.delete_user.delay(ep.everlytic_id)
-        # ep.delete()
     except EverlyticProfile.DoesNotExist:
-        pass
+        return
+
+    tasks.delete_user.delay(ep.everlytic_id)
+    # ep.delete()
