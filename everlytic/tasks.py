@@ -2,7 +2,7 @@ from celery import task
 
 from foundry.models import Member
 
-from . import api
+from everlytic import api
 
 
 @task
