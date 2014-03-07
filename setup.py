@@ -13,6 +13,7 @@ setup(
     install_requires = [
         'xmlrpclib',
         'jmbo-foundry',
+        'django-celery',
     ],
     tests_require=[
         'django-setuptest',
