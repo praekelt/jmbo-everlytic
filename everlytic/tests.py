@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.conf import settings
 from django.db import connection, transaction
+from celery import current_app
 
 from foundry.models import Member
 
@@ -15,6 +16,8 @@ from everlytic import api
 class EverlyticTestCase(TestCase):
 
     def setUp(self):
+        celery_app = current_app
+        celery_app.add_defaults({'CELERY_ALWAYS_EAGER': True})
         self.member_attrs = {
             'first_name': 'firstname',
             'last_name': 'lastname',
