@@ -5,7 +5,7 @@ from foundry.models import Member
 from everlytic import api
 
 
-@task(bind=True)
+@task
 def subscribe_user(member_id, profile_class):
     instance = Member.objects.get(pk=member_id)
     ep, created = profile_class.objects.get_or_create(member=instance)
@@ -16,10 +16,10 @@ def subscribe_user(member_id, profile_class):
             instance.email,
             instance.receive_email,
             everlytic_id=ep.everlytic_id)
-        if everlytic_id is None:
-            raise self.retry()
         ep.everlytic_id = everlytic_id
         ep.save()
+        if everlytic_id is None:
+            raise subscribe_user.retry()
 
 
 @task
