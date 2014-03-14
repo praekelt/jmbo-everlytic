@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 from foundry.models import Member
 
-import api
+from everlytic import tasks
 
 
 class EverlyticProfile(models.Model):
@@ -25,14 +25,7 @@ def member_post_save(sender, instance, **kwargs):
     Set the subscription status of the Contact on the Everlytic mailing
     list.
     """
-    ep, created = EverlyticProfile.objects.get_or_create(member=instance)
-    if created and instance.email:
-        ep.everlytic_id = api.subscribeUser(instance.last_name,
-                                            instance.first_name,
-                                            instance.email,
-                                            instance.receive_email,
-                                            everlytic_id=ep.everlytic_id)
-        ep.save()
+    tasks.subscribe_user.delay(instance.id, EverlyticProfile)
 
 
 @receiver(pre_delete, sender=User)
@@ -43,7 +36,8 @@ def member_pre_delete(sender, instance, **kwargs):
     """
     try:
         ep = EverlyticProfile.objects.get(member=instance)
-        api.deleteEverlyticUser(ep.everlytic_id)
-        # ep.delete()
     except EverlyticProfile.DoesNotExist:
-        pass
+        return
+
+    tasks.delete_user.delay(ep.everlytic_id)
+    # ep.delete()
