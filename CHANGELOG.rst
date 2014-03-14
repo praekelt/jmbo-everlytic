@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.1.3
+-----
+#. Use celery to prevent timeouts.
+
 0.1.2
 -----
 #. Cleanup tests.

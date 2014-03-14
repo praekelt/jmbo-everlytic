@@ -139,13 +139,15 @@ def deleteEverlyticUser(contact_id):
         sp = ServerProxy(EVERLYTIC_HOST)
     except IOError:
         logger.error("xmlrpclib: Could not connect to the remote host.")
-        return
+        return False
 
     # Delete the user
     try:
         result = sp.contacts.delete(EVERLYTIC_API_KEY, contact_id)
         if result['status'] != 'success':
             logger.warning("Everlytic error: %s", result['message'])
+        else:
+            return True
     except Fault as e:
         logger.error("XMLRPC Fault. Code: %s, Message %s", e.faultCode, e.faultString)
     except ProtocolError as e:
@@ -153,3 +155,4 @@ def deleteEverlyticUser(contact_id):
                 e.url, e.errcode, e.errmsg)
     except ExpatError:
         logger.error("ExpatError: Response does not contain XML")
+    return False
