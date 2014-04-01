@@ -25,7 +25,15 @@ def member_post_save(sender, instance, **kwargs):
     Set the subscription status of the Contact on the Everlytic mailing
     list.
     """
-    tasks.subscribe_user.delay(instance.id, EverlyticProfile)
+    if instance.receive_email:
+        tasks.subscribe_user.delay(instance.id, EverlyticProfile)
+    else:
+        try:
+            ep = instance.everlyticprofile
+        except EverlyticProfile.DoesNotExist:
+            pass
+        else:
+            tasks.delete_user.delay(ep.everlytic_id)
 
 
 @receiver(pre_delete, sender=User)
@@ -40,4 +48,3 @@ def member_pre_delete(sender, instance, **kwargs):
         return
 
     tasks.delete_user.delay(ep.everlytic_id)
-    # ep.delete()

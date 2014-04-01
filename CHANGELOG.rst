@@ -1,6 +1,10 @@
 Changelog
 =========
 
+next
+----
+#. Unsubscribe from Everlytic if user changes `receive_email` value.
+
 0.1.3
 -----
 #. Use celery to prevent timeouts.
